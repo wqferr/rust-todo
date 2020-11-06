@@ -1,25 +1,34 @@
+#[derive(Debug)]
 pub struct Item {
     title: String,
     description: Option<String>,
-    done: bool
+    done: bool,
+
+    str_repr: String
 }
 
 impl Item {
     pub fn new(title: &str, desc: Option<&str>) -> Item {
-        Item {
+        let mut new_item = Item {
             title: String::from(title),
             description: desc.map(|x| String::from(x)),
-            done: false
-        }
+            done: false,
+            str_repr: String::new()
+        };
+        new_item.update_str_repr();
+        new_item
     }
 
     pub fn set_done(&mut self, done_now: bool) {
         self.done = done_now;
+        self.update_str_repr();
     }
-}
 
-impl ToString for Item {
-    fn to_string(&self) -> String {
+    pub fn done(&self) -> bool {
+        self.done
+    }
+
+    fn update_str_repr(&mut self) {
         let mut result = String::new();
         if self.done {
             result.push_str("[x] ");
@@ -36,6 +45,12 @@ impl ToString for Item {
             },
             None => {}
         }
-        result
+        self.str_repr = result;
+    }
+}
+
+impl ToString for Item {
+    fn to_string(&self) -> String {
+        String::clone(&self.str_repr)
     }
 }
